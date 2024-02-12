@@ -2,7 +2,13 @@ const PlatformModel = require('../models/platform.model');
 
 const getPlatformProfiles = async (req, res) => {
     try {
-        const platforms = await PlatformModel.getPlatformProfiles();
+        const user = req.user
+        
+        if (user.roleid == 1) {
+            const platforms = await PlatformModel.getAllPlatformProfiles();
+            return res.json({ success: true, data: platforms });
+        }
+        const platforms = await PlatformModel.getPlatformProfiles(user.userprofileid);
         res.json({ success: true, data: platforms });
     } catch (err) {
         console.log(err)
@@ -12,9 +18,16 @@ const getPlatformProfiles = async (req, res) => {
 
 const addPlatform = async (req, res) => {
     try {
+        const user = req.user
         const { name, emailaddress1, contactnumber, url, city } = req.body;
         const image = req.file.path
-        const newObj = await PlatformModel.addPlatform(name, emailaddress1, contactnumber, url, city, image);
+
+        if (user.roleid == 1) {
+            const newObj = await PlatformModel.addPlatformFromAdmin(name, emailaddress1, contactnumber, url, city, image);
+            return res.status(201).json({ success: true, data: newObj });
+        }
+
+        const newObj = await PlatformModel.addPlatform(name, emailaddress1, contactnumber, url, city, image, user.userprofileid);
         res.status(201).json({ success: true, data: newObj });
     } catch (err) {
         console.error(err.message);

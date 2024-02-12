@@ -1,7 +1,6 @@
 const { DB } = require('../../config');
 
 const getVendorProfiles = async (id) => {
-  // const result = await DB.query('SELECT * FROM vendorprofile WHERE vendorid = $1', [id]);
   const result = await DB.query(
     `SELECT vup.*, vp.*
      FROM vendoruserprofile vup
@@ -34,12 +33,23 @@ const addVendor = async (name, emailaddress1, contactnumber, url, city, filePath
 };
 
 const updateVendor = async (vendorId, name, emailaddress1, contactnumber, url, city, image) => {
-  const query = `
-        UPDATE vendorprofile
-        SET name = $1, emailaddress1 = $2, contactnumber = $3, url = $4, city = $5, image = $6
-        WHERE vendorid = $7
+  let values, query
+  if (image == null) {
+      query = `
+          UPDATE vendorprofile
+          SET name = $1, emailaddress1 = $2, contactnumber = $3, url = $4, city = $5
+          WHERE vendorid = $6
       `;
-  const values = [name, emailaddress1, contactnumber, url, city, image, vendorId];
+      values = [name, emailaddress1, contactnumber, url, city, vendorId];
+  }
+  if (image != null) {
+      query = `
+          UPDATE vendorprofile
+          SET name = $1, emailaddress1 = $2, contactnumber = $3, url = $4, city = $5, image = $6
+          WHERE vendorid = $7
+      `;
+      values = [name, emailaddress1, contactnumber, url, city, image, vendorId];
+  }
 
   await DB.query(query, values);
 };

@@ -25,13 +25,33 @@ export const vendorRoutes = [
         path: `${APP_PREFIX_PATH}/vendors`,
         component: React.lazy(() => import('views/app-views/vendor/vendors')),
     },
+    {
+        key: 'taxes',
+        path: `${APP_PREFIX_PATH}/taxes`,
+        component: React.lazy(() => import('views/app-views/vendor/taxes')),
+    },
+    {
+        key: 'addons',
+        path: `${APP_PREFIX_PATH}/addons`,
+        component: React.lazy(() => import('views/app-views/vendor/addons')),
+    },
 ]
 
 export const platformRoutes = [
     {
-        key: 'platforms',
-        path: `${APP_PREFIX_PATH}/platforms`,
-        component: React.lazy(() => import('views/app-views/platform')),
+        key: 'edit-profile',
+        path: `${APP_PREFIX_PATH}/edit-profile`,
+        component: React.lazy(() => import('views/app-views/platform/edit-profile')),
+    },
+    {
+        key: 'api-keys',
+        path: `${APP_PREFIX_PATH}/api-keys`,
+        component: React.lazy(() => import('views/app-views/platform/api-keys')),
+    },
+    {
+        key: 'whitelist-vendors',
+        path: `${APP_PREFIX_PATH}/whitelist-vendors`,
+        component: React.lazy(() => import('views/app-views/platform/whitelist-vendors')),
     },
 ]
 

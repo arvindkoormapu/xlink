@@ -15,7 +15,7 @@ const checkAuth = async (req, res, next) => {
 
    // Fetch user from your database using the firebaseUID
    const user = await DB.query(`SELECT * FROM userprofile WHERE externaluserid = '${firebaseUID}'`);
-
+   
    if (user.rows.length === 0) {
      return res.status(404).send('User not found');
    }

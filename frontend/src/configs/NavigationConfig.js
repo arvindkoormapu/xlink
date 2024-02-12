@@ -1,4 +1,4 @@
-import { ContactsOutlined, UsergroupAddOutlined, ShopOutlined } from '@ant-design/icons';
+import { ContactsOutlined, UsergroupAddOutlined, ShopOutlined, FileProtectOutlined, KeyOutlined, MoneyCollectOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import { APP_PREFIX_PATH } from 'configs/AppConfig'
 
 export const adminNavTree = [
@@ -37,14 +37,38 @@ export const vendorNavTree = [
     breadcrumb: false,
     submenu: []
   },
+  {
+    key: 'taxes',
+    path: `${APP_PREFIX_PATH}/taxes`,
+    title: 'Taxes',
+    icon: MoneyCollectOutlined,
+    breadcrumb: false,
+    submenu: []
+  },
+  {
+    key: 'addons',
+    path: `${APP_PREFIX_PATH}/addons`,
+    title: 'Addons',
+    icon: AppstoreAddOutlined,
+    breadcrumb: false,
+    submenu: []
+  },
 ]
 
 export const platformNavTree = [
   {
-    key: 'platforms',
-    path: `${APP_PREFIX_PATH}/platforms`,
-    title: 'Platforms',
-    icon: ShopOutlined,
+    key: 'api-keys',
+    path: `${APP_PREFIX_PATH}/api-keys`,
+    title: 'API keys',
+    icon: KeyOutlined,
+    breadcrumb: false,
+    submenu: []
+  },
+  {
+    key: 'whitelist-vendors',
+    path: `${APP_PREFIX_PATH}/whitelist-vendors`,
+    title: 'Whitelist vendors',
+    icon: FileProtectOutlined,
     breadcrumb: false,
     submenu: []
   },

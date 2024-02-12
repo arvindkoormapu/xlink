@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState, useContext } from 'react'
 import PageHeaderAlt from 'components/layout-components/PageHeaderAlt'
 import { Table, Tag, Tooltip, message, Button, Modal, Form, Input, Upload, Popconfirm } from 'antd';
 import {
@@ -13,6 +13,7 @@ import AvatarStatus from 'components/shared-components/AvatarStatus';
 import { useDispatch, useSelector } from "react-redux";
 import View from './view';
 import { getPlatformsAction, createPlatformAction, updatePlatformAction, deletePlatformAction } from "../../../store/actions/platformActions";
+import { AuthContext } from '../../../auth/AuthContext';
 
 const layout = {
   labelCol: { span: 6 },
@@ -20,6 +21,7 @@ const layout = {
 };
 
 const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
+  const { currentUser } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -29,12 +31,10 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
     form.setFieldsValue(defaultValues)
   }, [form, defaultValues])
 
-  const normFile = e => {
-    return e && e.fileList;
-  };
-
-  const onCreate = values => {
+  const onCreate = async values => {
     console.log('Received values of form: ', values);
+    const token = await currentUser.getIdToken();
+
     if (!isEditEnabled) {
       let formData = new FormData();
       formData.append('name', values.name);
@@ -42,8 +42,8 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
       formData.append('contactnumber', values.contactnumber);
       formData.append('url', values.url);
       formData.append('city', values.city);
-      formData.append('image', values.image[0].originFileObj);
-      dispatch(createPlatformAction(formData))
+      formData.append('image', values.image.fileList[0].originFileObj);
+      dispatch(createPlatformAction(formData, token))
       messageApi.open({
         type: 'success',
         content: 'Successfully added!',
@@ -59,9 +59,9 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
       formData.append('url', data.url);
       formData.append('city', data.city);
       if(data.image){
-        formData.append('image', data.image[0].originFileObj);
+        formData.append('image', data.image.fileList[0].originFileObj);
       }
-      dispatch(updatePlatformAction(defaultValues.platformid, formData))
+      dispatch(updatePlatformAction(defaultValues.platformid, formData, token))
     }
   };
 
@@ -149,8 +149,6 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
             <Form.Item
               name="image"
               label="Profile Image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
             >
               <Upload beforeUpload={() => false} accept="image/*" name="logo" listType="picture" maxCount={1}>
                 <Button>
@@ -162,8 +160,6 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
             <Form.Item
               name={defaultValues.image}
               label="Profile Image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
             >
               <Upload beforeUpload={() => false} accept="image/*" name="logo" listType="picture" maxCount={1}>
                 <Button>
@@ -179,14 +175,19 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
 };
 
 function PlatformsList() {
-
+  const { currentUser } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const platformsList = useSelector((state) => state.platformReducer).platforms;
 
   useEffect(() => {
-    dispatch(getPlatformsAction())
-  }, [])
+    async function fetchMyAPI() {
+      const token = await currentUser.getIdToken();
+      dispatch(getPlatformsAction(token))
+    }
+
+    fetchMyAPI()
+  }, [currentUser])
 
   const [platformProfileVisible, setPlatformProfileVisible] = useState(false)
   const [selectedPlatform, setSelectedPlatform] = useState(null)

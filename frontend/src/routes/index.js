@@ -26,7 +26,7 @@ const Routes = () => {
 			}
 			if (getUser.roleid == 3) {
 				setNavTree(platformRoutes)
-				setPath('platforms')
+				setPath('whitelist-vendors')
 			}
 			
 		}

@@ -1,10 +1,14 @@
 import axios from "axios";
 const PlatformService = {}
 
-PlatformService.getPlatforms = function () {
+PlatformService.getPlatforms = function (token) {
     return new Promise((resolve, reject) => {
         axios
-            .get(`${process.env.REACT_APP_API_BASE_URL}/api/platform`)
+            .get(`${process.env.REACT_APP_API_BASE_URL}/api/platform`, {
+                headers: {
+                    Authorization: token
+                }
+            })
             .then((response) => {
                 console.log(response)
                 if (response.status === 200) {
@@ -19,12 +23,13 @@ PlatformService.getPlatforms = function () {
     });
 }
 
-PlatformService.createPlatform = function (data) {
+PlatformService.createPlatform = function (data, token) {
     return new Promise((resolve, reject) => {
         axios
             .post(`${process.env.REACT_APP_API_BASE_URL}/api/platform`, data, {
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': token
                 },
             })
             .then((response) => {

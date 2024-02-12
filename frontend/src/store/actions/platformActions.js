@@ -1,8 +1,8 @@
 import * as types from "../../constants/ApiConstant";
 import PlatformService from 'services/PlatformService';
 
-export const getPlatformsAction = () => async (dispatch) => {
-	return PlatformService.getPlatforms()
+export const getPlatformsAction = (token) => async (dispatch) => {
+	return PlatformService.getPlatforms(token)
 		.then((response) => {
 			dispatch({
 				type: types.GET_PLATFORMS_SUCCESS,
@@ -15,9 +15,9 @@ export const getPlatformsAction = () => async (dispatch) => {
 		});
 };
 
-export const createPlatformAction = (data) => async (dispatch, getState) => {
+export const createPlatformAction = (data, token) => async (dispatch, getState) => {
 	const { platformReducer } = getState()
-	return PlatformService.createPlatform(data)
+	return PlatformService.createPlatform(data, token)
 		.then((response) => {
 			if (response.success) {
 				const platforms = [...platformReducer.platforms, response.data]
@@ -33,11 +33,11 @@ export const createPlatformAction = (data) => async (dispatch, getState) => {
 		});
 };
 
-export const updatePlatformAction = (id, data) => async (dispatch) => {
+export const updatePlatformAction = (id, data, token) => async (dispatch) => {
 	return PlatformService.updatePlatform(id, data)
 		.then((response) => {
 			if (response.success) {
-				dispatch(getPlatformsAction())
+				dispatch(getPlatformsAction(token))
 			}
 		})
 		.catch((error) => {

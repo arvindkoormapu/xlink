@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Avatar } from 'antd';
+import { Avatar, Switch } from 'antd';
 
 const renderAvatar = props => {
 	return <Avatar {...props} className={`ant-avatar-${props.type}`}>{props.text}</Avatar>;
 }
 
 export const AvatarStatus = props => {
-	const { name, suffix, subTitle, id, type, src, icon, size, shape, gap, text, onNameClick } = props
+	const { name, suffix, subTitle, id, type, src, icon, size, shape, gap, text, onNameClick, onChangeSwitch, checked } = props
 	return (
 		<div className="avatar-status d-flex align-items-center">
-			{renderAvatar({icon, src, type, size, shape, gap, text })}
+			{src ? renderAvatar({icon, src, type, size, shape, gap, text }) : <div><Switch defaultChecked={checked} onChange={onChangeSwitch} size="small" /></div>}
 			<div className="ml-2">
 				<div>
 					{

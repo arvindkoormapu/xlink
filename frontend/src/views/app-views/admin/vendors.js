@@ -21,6 +21,8 @@ const layout = {
 };
 
 const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
+  const { currentUser } = useContext(AuthContext);
+
   const dispatch = useDispatch();
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,12 +32,9 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
     form.setFieldsValue(defaultValues)
   }, [form, defaultValues])
 
-  const normFile = e => {
-    return e && e.fileList;
-  };
-
-  const onCreate = values => {
+  const onCreate = async values => {
     console.log('Received values of form: ', values);
+    const token = await currentUser.getIdToken();
     if (!isEditEnabled) {
       let formData = new FormData();
       formData.append('name', values.name);
@@ -43,8 +42,8 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
       formData.append('contactnumber', values.contactnumber);
       formData.append('url', values.url);
       formData.append('city', values.city);
-      formData.append('image', values.image[0].originFileObj);
-      dispatch(createVendorAction(formData))
+      formData.append('image', values.image.fileList[0].originFileObj);
+      dispatch(createVendorAction(formData, token))
       messageApi.open({
         type: 'success',
         content: 'Successfully added!',
@@ -59,8 +58,10 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
       formData.append('contactnumber', data.contactnumber);
       formData.append('url', data.url);
       formData.append('city', data.city);
-      formData.append('image', data.image[0].originFileObj);
-      dispatch(updateVendorAction(defaultValues.vendorid, formData))
+      if (data.image) {
+        formData.append('image', data.image.fileList[0].originFileObj);
+      }
+      dispatch(updateVendorAction(defaultValues.vendorid, formData, token))
     }
   };
 
@@ -148,8 +149,6 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
             <Form.Item
               name="image"
               label="Profile Image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
             >
               <Upload beforeUpload={() => false} accept="image/*" name="logo" listType="picture" maxCount={1}>
                 <Button>
@@ -161,8 +160,6 @@ const CreateForm = ({ visible, isEditEnabled, defaultValues, onCancel }) => {
             <Form.Item
               name={defaultValues.image}
               label="Profile Image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
             >
               {/* <img crossOrigin='anonymous' src={`${process.env.REACT_APP_API_BASE_URL}/${defaultValues.image}`} alt="avatar" /> */}
               <Upload beforeUpload={() => false} accept="image/*" name="logo" listType="picture" maxCount={1}>

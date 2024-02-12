@@ -3,7 +3,7 @@ const VendorModel = require('../models/vendor.model');
 const getVendorProfiles = async (req, res) => {
     try {
         const user = req.user
-        if (user.roleid == 1) {
+        if (user.roleid == 1 || user.roleid == 3) {
             const vendors = await VendorModel.getAllVendorProfiles();
             return res.json({ success: true, data: vendors });
         }
@@ -39,7 +39,7 @@ const updateVendor = async (req, res) => {
     try {
         const id = req.params.id;
         const { name, emailaddress1, contactnumber, url, city } = req.body;
-        const image = req.file.path
+        const image = req.file ? req.file.path : null
         await VendorModel.updateVendor(id, name, emailaddress1, contactnumber, url, city, image);
 
         res.status(200).json({ success: true });

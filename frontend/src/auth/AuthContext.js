@@ -7,8 +7,6 @@ import firebaseConfig from 'configs/FirebaseConfig';
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
-// import firebase from 'firebase/compat/app';
-// import 'firebase/compat/auth';
 
 export const AuthContext = createContext();
 

@@ -13,6 +13,8 @@ import Flex from 'components/shared-components/Flex';
 import { signOut } from 'store/slices/authSlice';
 import styled from '@emotion/styled';
 import { FONT_WEIGHT, MEDIA_QUERIES, SPACER, FONT_SIZES } from 'constants/ThemeConstant'
+import { APP_PREFIX_PATH } from '../../configs/AppConfig'
+import { Link } from 'react-router-dom';
 
 const Icon = styled.div(() => ({
 	fontSize: FONT_SIZES.LG
@@ -39,12 +41,12 @@ const Title = styled.span(() => ({
 	opacity: 0.8
 }))
 
-// const MenuItem = (props) => (
-// 	<Flex as="a" href={props.path} alignItems="center" gap={SPACER[2]}>
-// 		<Icon>{props.icon}</Icon>
-// 		<span>{props.label}</span>
-// 	</Flex>
-// )
+const MenuItem = (props) => (
+	<Flex as={Link} to={props.path} alignItems="center" gap={SPACER[2]}>
+		<Icon>{props.icon}</Icon>
+		<span>{props.label}</span>
+	</Flex>
+)
 
 const MenuItemSignOut = (props) => {
 
@@ -67,6 +69,10 @@ const MenuItemSignOut = (props) => {
 }
 
 const items = [
+	{
+		key: 'Edit Profile',
+		label: <MenuItem path={`${APP_PREFIX_PATH}/edit-profile`} label="Edit Profile" icon={<EditOutlined />} />,
+	},
 	{
 		key: 'Sign Out',
 		label: <MenuItemSignOut label="Sign Out" />,

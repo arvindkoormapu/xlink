@@ -2,6 +2,7 @@ import * as types from "../../constants/ApiConstant";
 import VendorService from 'services/VendorService';
 
 export const getVendorsAction = (token) => async (dispatch) => {
+	console.log(token)
 	return VendorService.getVendors(token)
 		.then((response) => {
 			dispatch({
@@ -33,11 +34,11 @@ export const createVendorAction = (data, token) => async (dispatch, getState) =>
 		});
 };
 
-export const updateVendorAction = (id, data) => async (dispatch) => {
+export const updateVendorAction = (id, data, token) => async (dispatch) => {
 	return VendorService.updateVendor(id, data)
 		.then((response) => {
 			if (response.success) {
-				dispatch(getVendorsAction())
+				dispatch(getVendorsAction(token))
 			}
 		})
 		.catch((error) => {
